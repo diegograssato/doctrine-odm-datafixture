@@ -1,5 +1,5 @@
 {
-  "name": "zdeveloper/doctrine-odm-datafixtures",
+  "name": "zdeveloper/doctrine-odm-datafixture",
   "description": "Module to generate fixture with Doctrine ODM",
   "type": "library",
   "license": "MIT",
@@ -10,7 +10,7 @@
     "ZFLabs",
     "fixture"
   ],
-  "homepage": "https://bitbucket.org/zdeveloper/doctrine-odm-datafixtures",
+  "homepage": "https://bitbucket.org/zdeveloper/doctrine-odm-datafixture",
   "authors": [{
     "name": "Diego Pereira Grassato",
     "email": "diego.grassato@gmail.com"
