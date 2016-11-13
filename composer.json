@@ -7,7 +7,8 @@
     "module",
     "zf2",
     "zf3",
-    "ZFLabs",
+    "zdeveloper",
+    "doctrine",
     "fixture"
   ],
   "homepage": "https://bitbucket.org/zdeveloper/doctrine-odm-datafixture",

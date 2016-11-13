@@ -13,7 +13,6 @@ use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
 /**
  * Command to create the database schema for a set of classes based on their mappings.
  *
- * @link    www.doctrine-project.org
  * @since   1.0
  * @author  Diego Pereira Grassoto <diego.grassato@gmail.com>
  */
@@ -25,14 +24,15 @@ class DoctrineMongoODMDatafixtureCommand extends AbstractCommand
             ->setName('odm:fixture:load')
             ->setDescription('Load data fixtures to your database.')
             ->addOption('fixtures', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory to load data fixtures from.')
+            ->addOption('dm', null, InputOption::VALUE_OPTIONAL, 'Set document manager.')
             ->addOption('append', null, InputOption::VALUE_NONE, 'Append the data fixtures instead of deleting all data from the database first.')
             ->setHelp(<<<EOT
 The <info>odm:fixture:load</info> command loads data fixtures from your bundles:
-  <info>./app/consoleodm:fixture:load</info>
+  <info>php public/index.php odm:fixture:load</info>
 You can also optionally specify the path to fixtures with the <info>--fixtures</info> option:
-  <info>./app/console odm:fixture:load --fixtures=/path/to/fixtures1 --fixtures=/path/to/fixtures2</info>
+  <info>php public/index.php odm:fixture:load --fixtures=/path/to/fixtures1 --fixtures=/path/to/fixtures2</info>
 If you want to append the fixtures instead of flushing the database first you can use the <info>--append</info> option:
-  <info>./app/console odm:fixture:load --append</info>
+  <info>php public/index.php odm:fixture:load --append</info>
 
 EOT
             );
