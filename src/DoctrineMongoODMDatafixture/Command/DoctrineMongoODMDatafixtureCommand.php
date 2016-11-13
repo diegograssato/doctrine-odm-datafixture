@@ -24,7 +24,7 @@ class DoctrineMongoODMDatafixtureCommand extends AbstractCommand
             ->setName('odm:fixture:load')
             ->setDescription('Load data fixtures to your database.')
             ->addOption('fixtures', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory to load data fixtures from.')
-            ->addOption('dm', null, InputOption::VALUE_OPTIONAL, 'Set document manager.')
+            ->addOption('dm', null, InputOption::VALUE_OPTIONAL, 'The name of the documentmanager to use. If none is provided, it will use odm_default.')
             ->addOption('append', null, InputOption::VALUE_NONE, 'Append the data fixtures instead of deleting all data from the database first.')
             ->setHelp(<<<EOT
 The <info>odm:fixture:load</info> command loads data fixtures from your bundles:
