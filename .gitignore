@@ -1,0 +1,22 @@
+### ZendFramework template
+# Composer files
+composer.phar
+vendor/
+
+# Local configs
+config/autoload/*.local.php
+
+
+# Data
+data/logs/
+data/cache/
+data/sessions/
+data/tmp/
+temp/
+
+#Doctrine 2
+data/DoctrineMongoODMModule/Proxy/
+data/DoctrineMongoODMModule/Hydrator/
+data/DoctrineMongoODMModule/cache/
+
+.idea/

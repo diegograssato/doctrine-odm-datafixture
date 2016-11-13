@@ -1,0 +1,58 @@
+{
+  "name": "zdeveloper/doctrine-odm-datafixtures",
+  "description": "Module to generate fixture with Doctrine ODM",
+  "type": "library",
+  "license": "MIT",
+  "keywords": [
+    "module",
+    "zf2",
+    "zf3",
+    "ZFLabs",
+    "fixture"
+  ],
+  "homepage": "https://bitbucket.org/zdeveloper/doctrine-odm-datafixtures",
+  "authors": [{
+    "name": "Diego Pereira Grassato",
+    "email": "diego.grassato@gmail.com"
+  }],
+  "extra": {
+    "zf": {
+      "module": "DoctrineMongoODMDatafixture"
+    }
+  },
+  "require": {
+    "php": "^5.6 || ^7.0",
+    "doctrine/mongodb-odm": "^1.1",
+    "doctrine/doctrine-mongo-odm-module": "dev-master",
+    "doctrine/data-fixtures": "dev-master",
+    "zendframework/zend-mvc": "^2.7.10 || ^3.0.1",
+    "zendframework/zend-servicemanager": "^2.7.6 || ^3.1",
+    "zendframework/zend-stdlib": "^2.7.7 || ^3.0.1"
+
+  },
+  "minimum-stability": "dev",
+  "require-dev": {
+    "phpunit/phpunit": "^4.8",
+    "squizlabs/php_codesniffer": "^2.6.2",
+    "zendframework/zend-console": "^2.6",
+    "zendframework/zend-i18n": "^2.7.3",
+    "zendframework/zend-log": "^2.9",
+    "zendframework/zend-modulemanager": "^2.7.2",
+    "zendframework/zend-serializer": "^2.8",
+    "zendframework/zend-session": "^2.7.3",
+    "zendframework/zend-view": "^2.8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "DoctrineMongoODMDatafixture\\": "src/"
+    }
+  },
+  "extra": [],
+  "scripts": {
+    "cs-check": "vendor/bin/phpcs --colors --standard=PSR2 src/",
+    "cs-fix": "vendor/bin/phpcbf  --colors --standard=PSR2 src/"
+  },
+  "bin": [
+    "bin/odm-data-fixture"
+  ]
+}
