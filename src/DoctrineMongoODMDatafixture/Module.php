@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputOption;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\ModuleManagerInterface;
+use Symfony\Component\Console\Helper\QuestionHelper;
 
 class Module
 {
@@ -34,7 +35,8 @@ class Module
     public function loadCli(EventInterface $event)
     {
         $commands = array(
-            new \DoctrineMongoODMDatafixture\Command\DoctrineMongoODMDatafixtureCommand()
+            new \DoctrineMongoODMDatafixture\Command\DoctrineMongoODMDatafixtureCommand(),
+            new \DoctrineMongoODMDatafixture\Command\DoctrineMongoODMDatafixtureListCommand()
         );
 
         foreach ($commands as $command) {
@@ -58,5 +60,6 @@ class Module
         $documentManager = $event->getParam('ServiceManager')->get('doctrine.documentmanager.' . $documentManagerName);
         $documentHelper  = new \Doctrine\ODM\MongoDB\Tools\Console\Helper\DocumentManagerHelper($documentManager);
         $cli->getHelperSet()->set($documentHelper, 'dm');
+        $cli->getHelperSet()->set(new QuestionHelper(), 'question');
     }
 }

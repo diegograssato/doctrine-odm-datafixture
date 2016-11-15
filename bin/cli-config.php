@@ -1,6 +1,7 @@
 <?php
 use Zend\Mvc\Application;
 use Zend\Stdlib\ArrayUtils;
+
 $basePath = getcwd();
 ini_set('display_errors', true);
 chdir(__DIR__);
@@ -11,7 +12,7 @@ while (!file_exists('config/application.config.php')) {
     $dir = dirname(getcwd());
 
     if ($previousDir === $dir) {
-        throw new RuntimeException(
+        throw new \RuntimeException(
             'Unable to locate "config/application.config.php": ' .
             'is DoctrineModule in a subdir of your application skeleton?'
         );
@@ -29,7 +30,7 @@ if (is_readable('init_autoloader.php')) {
 } elseif (file_exists(__DIR__ . '/../../../autoload.php')) {
     include_once __DIR__ . '/../../../autoload.php';
 } else {
-    throw new RuntimeException('Error: vendor/autoload.php could not be found. Did you run php composer.phar install?');
+    throw new \RuntimeException('Error: vendor/autoload.php could not be found. Did you run php composer.phar install?');
 }
 
 

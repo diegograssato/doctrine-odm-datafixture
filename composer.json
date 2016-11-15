@@ -34,26 +34,18 @@
   "minimum-stability": "dev",
   "require-dev": {
     "phpunit/phpunit": "^4.8",
-    "squizlabs/php_codesniffer": "^2.6.2",
-    "zendframework/zend-console": "^2.6",
-    "zendframework/zend-i18n": "^2.7.3",
-    "zendframework/zend-log": "^2.9",
-    "zendframework/zend-modulemanager": "^2.7.2",
-    "zendframework/zend-serializer": "^2.8",
-    "zendframework/zend-session": "^2.7.3",
-    "zendframework/zend-view": "^2.8.1"
+    "squizlabs/php_codesniffer": "^2.6.2"
   },
   "autoload": {
     "psr-4": {
       "DoctrineMongoODMDatafixture\\": "src/DoctrineMongoODMDatafixture"
     }
   },
-  "extra": [],
   "scripts": {
     "cs-check": "vendor/bin/phpcs --colors --standard=PSR2 src/",
     "cs-fix": "vendor/bin/phpcbf  --colors --standard=PSR2 src/"
   },
   "bin": [
-    "bin/odm-data-fixture"
+    "bin/doctrine-odm-datafixture"
   ]
 }

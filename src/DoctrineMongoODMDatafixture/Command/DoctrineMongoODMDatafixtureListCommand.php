@@ -9,7 +9,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\Common\DataFixtures\Loader;
 use Doctrine\Common\DataFixtures\Executor\MongoDBExecutor;
 use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command to create the database schema for a set of classes based on their mappings.
@@ -17,7 +16,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
  * @since   1.0
  * @author  Diego Pereira Grassoto <diego.grassato@gmail.com>
  */
-class DoctrineMongoODMDatafixtureCommand extends AbstractCommand
+class DoctrineMongoODMDatafixtureListCommand extends AbstractCommand
 {
     protected $paths = array();
 
@@ -25,24 +24,21 @@ class DoctrineMongoODMDatafixtureCommand extends AbstractCommand
     {
         $this->paths = $fixtures_paths;
 
-        parent::__construct("DoctrineMongoODMDatafixture");
+        parent::__construct("DoctrineMongoODMDatafixtureList");
     }
 
     protected function configure()
     {
         $this
-            ->setName('odm:fixture:load')
-            ->setDescription('Load data fixtures to your database.')
+            ->setName('odm:fixture:list')
+            ->setDescription('Lists data fixtures to your database.')
             ->addOption('fixtures', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory to load data fixtures from.')
             ->addOption('dm', null, InputOption::VALUE_OPTIONAL, 'Set document manager.')
-            ->addOption('append', null, InputOption::VALUE_NONE, 'Append the data fixtures instead of deleting all data from the database first.')
             ->setHelp(<<<EOT
 The <info>odm:fixture:load</info> command loads data fixtures from your bundles:
   <info>php public/index.php odm:fixture:load</info>
 You can also optionally specify the path to fixtures with the <info>--fixtures</info> option:
   <info>php public/index.php odm:fixture:load --fixtures=/path/to/fixtures1 --fixtures=/path/to/fixtures2</info>
-If you want to append the fixtures instead of flushing the database first you can use the <info>--append</info> option:
-  <info>php public/index.php odm:fixture:load --append</info>
 
 EOT
             );
@@ -51,20 +47,8 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln(sprintf('<comment>%s</comment>', "Loading fixtures"));
+        $output->writeln(sprintf('<comment>%s</comment>', "Lists fixtures"));
         $output->writeln(sprintf('<comment>%s</comment>', "------------------\n"));
-        if ($input->isInteractive() && !$input->getOption('append')) {
-            if (!$this->askConfirmation($input, $output, '<question>Careful, database will be purged. Do you want to continue y/N ?</question>', false)) {
-                return;
-            }
-            $output->writeln("");
-        }
-
-        $purger = new MongoDBPurger();
-        $executor = new MongoDBExecutor($this->getDocumentManager(), $purger);
-        $executor->setLogger(function ($message) use ($output) {
-            $output->writeln(sprintf('  <comment>✔</comment> <info>%s</info>', $message));
-        });
 
         $loader = new Loader();
         $dirOrFile = $input->getOption('fixtures');
@@ -93,10 +77,12 @@ EOT
                 sprintf('Could not find any fixtures to load in: %s', "\n\n- ".implode("\n- ", $paths))
             );
         }
-
-        $executor->execute($fixtures, $input->getOption('append'));
+        foreach ($fixtures as $fixture) {
+            $output->writeln(sprintf('  <comment>✔</comment> <info>%s</info>', get_class($fixture)));
+        }
         $output->writeln("");
     }
+
 
     protected function findFixtureInApplication()
     {
@@ -185,25 +171,5 @@ EOT
     protected function processDb(SchemaManager $sm)
     {
         throw new \BadMethodCallException('Cannot update a database');
-    }
-
-    /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     * @param string          $question
-     * @param bool            $default
-     *
-     * @return bool
-     */
-    private function askConfirmation(InputInterface $input, OutputInterface $output, $question, $default)
-    {
-
-        if (!class_exists('Symfony\Component\Console\Question\ConfirmationQuestion')) {
-            $dialog = $this->getHelperSet()->get('dialog');
-            return $dialog->askConfirmation($output, $question, $default);
-        }
-        $questionHelper = $this->getHelperSet()->get('question');
-        $question = new ConfirmationQuestion($question, $default);
-        return $questionHelper->ask($input, $output, $question);
     }
 }
