@@ -1,51 +1,56 @@
 {
-  "name": "diegograssato/doctrine-odm-datafixture",
-  "description": "Module to generate fixture with Doctrine ODM",
-  "type": "library",
-  "license": "MIT",
-  "keywords": [
-    "module",
-    "zf2",
-    "zf3",
-    "zdeveloper",
-    "doctrine",
-    "fixture"
-  ],
-  "homepage": "https://bitbucket.org/zdeveloper/doctrine-odm-datafixture",
-  "authors": [{
-    "name": "Diego Pereira Grassato",
-    "email": "diego.grassato@gmail.com"
-  }],
-  "extra": {
-    "zf": {
-      "module": "DoctrineMongoODMDatafixture"
-    }
-  },
-  "require": {
-    "php": "^5.6 || ^7.0",
-    "doctrine/mongodb-odm": "^1.1",
-    "doctrine/doctrine-mongo-odm-module": "dev-master",
-    "doctrine/data-fixtures": "dev-master",
-    "zendframework/zend-mvc": "^2.7.10 || ^3.0.1",
-    "zendframework/zend-servicemanager": "^2.7.6 || ^3.1",
-    "zendframework/zend-stdlib": "^2.7.7 || ^3.0.1"
+    "name": "diegograssato/doctrine-odm-datafixture",
+    "description": "Module to generate fixture with Doctrine ODM",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "module",
+        "zf2",
+        "zf3",
+        "zdeveloper",
+        "doctrine",
+        "fixture"
+    ],
+    "homepage": "https://bitbucket.org/zdeveloper/doctrine-odm-datafixture",
+    "authors": [{
+        "name": "Diego Pereira Grassato",
+        "email": "diego.grassato@gmail.com"
+    }],
+    "extra": {
+        "zf": {
+            "module": "DoctrineMongoODMDatafixture"
+        }
+    },
+    "require": {
+        "php": "^5.6 || ^7.0",
+        "doctrine/mongodb-odm": "^1.1",
+        "doctrine/doctrine-mongo-odm-module": "dev-master",
+        "doctrine/data-fixtures": "dev-master",
+        "zendframework/zend-mvc": "^2.7.10 || ^3.0.1",
+        "zendframework/zend-servicemanager": "^2.7.6 || ^3.1",
+        "zendframework/zend-stdlib": "^2.7.7 || ^3.0.1"
 
-  },
-  "minimum-stability": "dev",
-  "require-dev": {
-    "phpunit/phpunit": "^4.8",
-    "squizlabs/php_codesniffer": "^2.6.2"
-  },
-  "autoload": {
-    "psr-4": {
-      "DoctrineMongoODMDatafixture\\": "src/DoctrineMongoODMDatafixture"
-    }
-  },
-  "scripts": {
-    "cs-check": "vendor/bin/phpcs --colors --standard=PSR2 src/",
-    "cs-fix": "vendor/bin/phpcbf  --colors --standard=PSR2 src/"
-  },
-  "bin": [
-    "bin/doctrine-odm-datafixture"
-  ]
+    },
+    "minimum-stability": "dev",
+    "require-dev": {
+        "phpunit/phpunit": "^4.8",
+        "squizlabs/php_codesniffer": "^2.6.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "DoctrineMongoODMDatafixture\\": "src/DoctrineMongoODMDatafixture"
+        }
+    },
+    "scripts": {
+        "cs-check": "vendor/bin/phpcs --colors --standard=PSR2 src/",
+        "cs-fix": "vendor/bin/phpcbf  --colors --standard=PSR2 src/"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.2"
+        }
+    },
+    "bin": [
+        "bin/doctrine-odm-datafixture"
+    ]
 }
