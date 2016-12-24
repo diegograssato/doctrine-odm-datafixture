@@ -33,6 +33,21 @@ In **module.config.php** you should inform the folder where your fixtures, for e
 
 ```
 
+or group configurator
+
+```
+'odm-data-fixtures' => [
+    'groups' => [
+        'default' => [
+            __NAMESPACE__.'_fixtures' => __DIR__.'/../src/Fixtures/default',
+        ],
+        'production' => [
+            __NAMESPACE__.'_fixtures' => __DIR__.'/../src/Fixtures/prod',
+        ]
+    ]
+]
+```
+
 To rotate the fixture use the terminal command:
 
 ```
@@ -55,4 +70,10 @@ If you want to append the fixtures instead of flushing the database first you ca
 
 ```
   php public/index.php odm:fixture:load --fixtures=/path/to/fixtures1 --fixtures=/path/to/fixtures2 --append
+```
+
+You can also optionally specify the group configuration:
+
+```
+  php public/index.php odm:fixture:load --group production
 ```
