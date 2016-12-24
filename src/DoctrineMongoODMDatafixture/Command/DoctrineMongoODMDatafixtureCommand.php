@@ -14,16 +14,17 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 /**
  * Command to create the database schema for a set of classes based on their mappings.
  *
- * @since   1.0
- * @author  Diego Pereira Grassoto <diego.grassato@gmail.com>
+ * @since  1.0
+ * @author Diego Pereira Grassoto <diego.grassato@gmail.com>
  */
 class DoctrineMongoODMDatafixtureCommand extends AbstractCommand
 {
-    protected $paths = array();
+    protected $paths = [];
+    protected $fixturesConfig = [];
 
-    public function __construct($fixtures_paths = null)
+    public function __construct($fixturesConfig = null)
     {
-        $this->paths = $fixtures_paths;
+        $this->fixturesConfig = $fixturesConfig;
 
         parent::__construct("DoctrineMongoODMDatafixture");
     }
@@ -34,15 +35,19 @@ class DoctrineMongoODMDatafixtureCommand extends AbstractCommand
             ->setName('odm:fixture:load')
             ->setDescription('Load data fixtures to your database.')
             ->addOption('fixtures', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory to load data fixtures from.')
+            ->addOption('group', null, InputOption::VALUE_OPTIONAL, 'Set group.')
             ->addOption('dm', null, InputOption::VALUE_OPTIONAL, 'Set document manager.')
             ->addOption('append', null, InputOption::VALUE_NONE, 'Append the data fixtures instead of deleting all data from the database first.')
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 The <info>odm:fixture:load</info> command loads data fixtures from your bundles:
-  <info>php public/index.php odm:fixture:load</info>
+  <info>php public/index.php odm:fixture:load -n</info>
 You can also optionally specify the path to fixtures with the <info>--fixtures</info> option:
   <info>php public/index.php odm:fixture:load --fixtures=/path/to/fixtures1 --fixtures=/path/to/fixtures2</info>
 If you want to append the fixtures instead of flushing the database first you can use the <info>--append</info> option:
   <info>php public/index.php odm:fixture:load --append</info>
+  If you want select to use group configuration
+  <info>php public/index.php odm:fixture:load --group production</info>
 
 EOT
             );
@@ -62,24 +67,24 @@ EOT
 
         $purger = new MongoDBPurger();
         $executor = new MongoDBExecutor($this->getDocumentManager(), $purger);
-        $executor->setLogger(function ($message) use ($output) {
-            $output->writeln(sprintf('  <comment>✔</comment> <info>%s</info>', $message));
-        });
+        $executor->setLogger(
+            function ($message) use ($output) {
+                $output->writeln(sprintf('  <comment>✔</comment> <info>%s</info>', $message));
+            }
+        );
 
         $loader = new Loader();
         $dirOrFile = $input->getOption('fixtures');
         if ($dirOrFile) {
             $paths = is_array($dirOrFile) ? $dirOrFile : array($dirOrFile);
-            $paths = array_unique($paths);
+            $this->paths = array_unique($paths);
         } else {
-            if (empty($this->paths)) {
-                $paths = $this->findFixtureInApplication();
-            } else {
-                $paths = $this->paths;
-            }
+
+            $this->getPathFromConig($input, $output);
         }
 
-        foreach ($paths as $path) {
+        foreach ($this->paths as $path) {
+
             if (is_dir($path)) {
                 $loader->loadFromDirectory($path);
             } elseif (is_file($path)) {
@@ -90,7 +95,7 @@ EOT
         $fixtures = $loader->getFixtures();
         if (!$fixtures) {
             throw new \RuntimeException(
-                sprintf('Could not find any fixtures to load in: %s', "\n\n- ".implode("\n- ", $paths))
+                sprintf('Could not find any fixtures to load in: %s', "\n\n- ".implode("\n- ", $this->paths))
             );
         }
 
@@ -132,9 +137,49 @@ EOT
         return $paths;
     }
 
+
+    protected function isGroupSupport()
+    {
+        if(count($this->fixturesConfig) === 0) {
+            return false;
+        }
+
+        return array_key_exists('groups', $this->fixturesConfig);
+    }
+
+    protected function getPathFromConig(InputInterface $input, OutputInterface $output)
+    {
+        if($this->isGroupSupport()) {
+
+            $group = $input->getOption('group');
+            if(isset($this->fixturesConfig['groups']['default']) && empty($group)) {
+
+                $this->paths = $this->fixturesConfig['groups']['default'];
+                $output->writeln(sprintf('<comment>%s</comment>', "Loading [ default ] group."));
+
+            }elseif (isset($this->fixturesConfig['groups'][$group])) {
+
+                $this->paths = $this->fixturesConfig['groups'][$group];
+                $output->writeln(sprintf('<comment>%s</comment>', "Loading [ $group ] group."));
+
+            }
+
+        }elseif (count($this->fixturesConfig) > 0) {
+
+            $this->paths = $this->fixturesConfig;
+            $output->writeln(sprintf('<comment>%s</comment>', "Loading path from configuration file."));
+
+        }elseif (empty($this->paths)) {
+
+            $output->writeln(sprintf('<comment>%s</comment>', "Detecting fixture in application."));
+            $this->paths = $this->findFixtureInApplication();
+
+        }
+    }
+
     /**
      * @param SchemaManager $sm
-     * @param object $document
+     * @param object        $document
      */
     protected function processDocumentIndex(SchemaManager $sm, $document)
     {
@@ -151,7 +196,7 @@ EOT
 
     /**
      * @param SchemaManager $sm
-     * @param object $document
+     * @param object        $document
      * @throws \BadMethodCallException
      */
     protected function processDocumentCollection(SchemaManager $sm, $document)
@@ -170,7 +215,7 @@ EOT
 
     /**
      * @param SchemaManager $sm
-     * @param object $document
+     * @param object        $document
      * @throws \BadMethodCallException
      */
     protected function processDocumentDb(SchemaManager $sm, $document)

@@ -13,18 +13,19 @@ use Doctrine\Common\DataFixtures\Purger\MongoDBPurger;
 /**
  * Command to create the database schema for a set of classes based on their mappings.
  *
- * @since   1.0
- * @author  Diego Pereira Grassoto <diego.grassato@gmail.com>
+ * @since  1.0
+ * @author Diego Pereira Grassoto <diego.grassato@gmail.com>
  */
 class DoctrineMongoODMDatafixtureListCommand extends AbstractCommand
 {
-    protected $paths = array();
+    protected $paths = [];
+    protected $fixturesConfig = [];
 
-    public function __construct($fixtures_paths = null)
+    public function __construct($fixturesConfig = null)
     {
-        $this->paths = $fixtures_paths;
+        $this->fixturesConfig = $fixturesConfig;
 
-        parent::__construct("DoctrineMongoODMDatafixtureList");
+        parent::__construct("DoctrineMongoODMDatafixtureListCommand");
     }
 
     protected function configure()
@@ -34,7 +35,9 @@ class DoctrineMongoODMDatafixtureListCommand extends AbstractCommand
             ->setDescription('Lists data fixtures to your database.')
             ->addOption('fixtures', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory to load data fixtures from.')
             ->addOption('dm', null, InputOption::VALUE_OPTIONAL, 'Set document manager.')
-            ->setHelp(<<<EOT
+            ->addOption('group', null, InputOption::VALUE_OPTIONAL, 'Set group.')
+            ->setHelp(
+                <<<EOT
 The <info>odm:fixture:load</info> command loads data fixtures from your bundles:
   <info>php public/index.php odm:fixture:load</info>
 You can also optionally specify the path to fixtures with the <info>--fixtures</info> option:
@@ -54,16 +57,13 @@ EOT
         $dirOrFile = $input->getOption('fixtures');
         if ($dirOrFile) {
             $paths = is_array($dirOrFile) ? $dirOrFile : array($dirOrFile);
-            $paths = array_unique($paths);
+            $this->paths = array_unique($paths);
         } else {
-            if (empty($this->paths)) {
-                $paths = $this->findFixtureInApplication();
-            } else {
-                $paths = $this->paths;
-            }
+
+            $this->getPathFromConig($input, $output);
         }
 
-        foreach ($paths as $path) {
+        foreach ($this->paths as $path) {
             if (is_dir($path)) {
                 $loader->loadFromDirectory($path);
             } elseif (is_file($path)) {
@@ -74,7 +74,7 @@ EOT
         $fixtures = $loader->getFixtures();
         if (!$fixtures) {
             throw new \RuntimeException(
-                sprintf('Could not find any fixtures to load in: %s', "\n\n- ".implode("\n- ", $paths))
+                sprintf('Could not find any fixtures to load in: %s', "\n\n- ".implode("\n- ", $this->paths))
             );
         }
         foreach ($fixtures as $fixture) {
@@ -117,10 +117,47 @@ EOT
 
         return $paths;
     }
+    protected function isGroupSupport()
+    {
+        if(count($this->fixturesConfig) === 0) {
+            return false;
+        }
 
+        return array_key_exists('groups', $this->fixturesConfig);
+    }
+
+    protected function getPathFromConig(InputInterface $input, OutputInterface $output)
+    {
+        if($this->isGroupSupport()) {
+
+            $group = $input->getOption('group');
+            if(isset($this->fixturesConfig['groups']['default']) && empty($group)) {
+
+                $this->paths = $this->fixturesConfig['groups']['default'];
+                $output->writeln(sprintf('<comment>%s</comment>', "Loading [ default ] group."));
+
+            }elseif (isset($this->fixturesConfig['groups'][$group])) {
+
+                $this->paths = $this->fixturesConfig['groups'][$group];
+                $output->writeln(sprintf('<comment>%s</comment>', "Loading [ $group ] group."));
+
+            }
+
+        }elseif (count($this->fixturesConfig) > 0) {
+
+            $this->paths = $this->fixturesConfig;
+            $output->writeln(sprintf('<comment>%s</comment>', "Loading path from configuration file."));
+
+        }elseif (empty($this->paths)) {
+
+            $output->writeln(sprintf('<comment>%s</comment>', "Detecting fixture in application."));
+            $this->paths = $this->findFixtureInApplication();
+
+        }
+    }
     /**
      * @param SchemaManager $sm
-     * @param object $document
+     * @param object        $document
      */
     protected function processDocumentIndex(SchemaManager $sm, $document)
     {
@@ -137,7 +174,7 @@ EOT
 
     /**
      * @param SchemaManager $sm
-     * @param object $document
+     * @param object        $document
      * @throws \BadMethodCallException
      */
     protected function processDocumentCollection(SchemaManager $sm, $document)
@@ -156,7 +193,7 @@ EOT
 
     /**
      * @param SchemaManager $sm
-     * @param object $document
+     * @param object        $document
      * @throws \BadMethodCallException
      */
     protected function processDocumentDb(SchemaManager $sm, $document)

@@ -22,13 +22,13 @@ $helperSet = new HelperSet(array(
     'question' => new QuestionHelper()
 ));
 
-$fixturesPath = (isset($config['odm-data-fixtures']))? $config['odm-data-fixtures'] : null;
+$fixturesConfig = (isset($config['odm-data-fixtures']))? $config['odm-data-fixtures'] : null;
 
 $cli->setHelperSet($helperSet);
 
 $cli->addCommands(array(
-    new \DoctrineMongoODMDatafixture\Command\DoctrineMongoODMDatafixtureCommand($fixturesPath),
-    new \DoctrineMongoODMDatafixture\Command\DoctrineMongoODMDatafixtureListCommand($fixturesPath),
+    new \DoctrineMongoODMDatafixture\Command\DoctrineMongoODMDatafixtureCommand($fixturesConfig),
+    new \DoctrineMongoODMDatafixture\Command\DoctrineMongoODMDatafixtureListCommand($fixturesConfig),
 ));
 
 $cli->setName('DoctrineMongoODMDatafixture Command Line Interface');
