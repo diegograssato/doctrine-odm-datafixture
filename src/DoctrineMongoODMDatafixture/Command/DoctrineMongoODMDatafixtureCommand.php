@@ -140,6 +140,7 @@ EOT
 
     protected function isGroupSupport()
     {
+
         if(count($this->fixturesConfig) === 0) {
             return false;
         }
@@ -169,7 +170,9 @@ EOT
             $this->paths = $this->fixturesConfig;
             $output->writeln(sprintf('<comment>%s</comment>', "Loading path from configuration file."));
 
-        }elseif (empty($this->paths)) {
+        }
+
+        if (empty($this->paths)) {
 
             $output->writeln(sprintf('<comment>%s</comment>', "Detecting fixture in application."));
             $this->paths = $this->findFixtureInApplication();

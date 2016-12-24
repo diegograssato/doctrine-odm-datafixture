@@ -9,7 +9,7 @@ Installation
 To install is quite simple, add the **composer.json:**
 
 ```
-    "diegograssato/doctrine-odm-datafixture": "dev-master"
+    "diegograssato/doctrine-odm-datafixture": "1.*"
 ```
 
 Next step is to update the composer
@@ -27,9 +27,9 @@ Then add **DoctrineMongoODMDatafixture** to your **config/application.config.php
 In **module.config.php** you should inform the folder where your fixtures, for example:
 
 ```
-  'odm-data-fixtures' => array(
+  'odm-data-fixtures' => [
       __NAMESPACE__.'_fixtures' => __DIR__.'/../src/Fixtures',
-  ),
+  ]
 
 ```
 

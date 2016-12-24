@@ -10,7 +10,7 @@ use Symfony\Component\Console\Helper\QuestionHelper;
 
 class Module
 {
-    const VERSION = '1.0';
+    const VERSION = '1.2';
 
     public function getConfig()
     {
@@ -36,9 +36,12 @@ class Module
      */
     public function loadCli(EventInterface $event)
     {
+        $config = $event->getParam('ServiceManager')->get('config');
+        $fixturesConfig = (isset($config['odm-data-fixtures']))? $config['odm-data-fixtures'] : null;
+
         $commands = array(
-            new \DoctrineMongoODMDatafixture\Command\DoctrineMongoODMDatafixtureCommand(),
-            new \DoctrineMongoODMDatafixture\Command\DoctrineMongoODMDatafixtureListCommand()
+            new \DoctrineMongoODMDatafixture\Command\DoctrineMongoODMDatafixtureCommand($fixturesConfig),
+            new \DoctrineMongoODMDatafixture\Command\DoctrineMongoODMDatafixtureListCommand($fixturesConfig)
         );
 
         foreach ($commands as $command) {
@@ -64,4 +67,5 @@ class Module
         $cli->getHelperSet()->set($documentHelper, 'dm');
         $cli->getHelperSet()->set(new QuestionHelper(), 'question');
     }
+
 }
