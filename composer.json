@@ -11,7 +11,7 @@
         "doctrine",
         "fixture"
     ],
-    "homepage": "https://bitbucket.org/zdeveloper/doctrine-odm-datafixture",
+    "homepage": "https://diegograssato.github.io/doctrine-odm-datafixture",
     "authors": [{
         "name": "Diego Pereira Grassato",
         "email": "diego.grassato@gmail.com"
@@ -23,13 +23,15 @@
     },
     "require": {
         "php": "^5.6 || ^7.0",
-        "doctrine/mongodb-odm": "^1.1",
-        "doctrine/doctrine-mongo-odm-module": "dev-master",
+        "doctrine/doctrine-mongo-odm-module": "^0.11.0",
         "doctrine/data-fixtures": "dev-master",
         "zendframework/zend-mvc": "^2.7.10 || ^3.0.1",
         "zendframework/zend-servicemanager": "^2.7.6 || ^3.1",
         "zendframework/zend-stdlib": "^2.7.7 || ^3.0.1"
 
+    },
+    "provide": {
+        "ext-mongo": "1.6.13"
     },
     "minimum-stability": "dev",
     "require-dev": {
