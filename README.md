@@ -77,3 +77,5 @@ You can also optionally specify the group configuration:
 ```
   php public/index.php odm:fixture:load --group production
 ```
+
+Finish!
