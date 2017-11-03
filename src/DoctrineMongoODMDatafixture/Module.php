@@ -10,7 +10,7 @@ use Symfony\Component\Console\Helper\QuestionHelper;
 
 class Module
 {
-    const VERSION = '1.2';
+    const VERSION = '1.3';
 
     public function getConfig()
     {
@@ -37,7 +37,7 @@ class Module
     public function loadCli(EventInterface $event)
     {
         $config = $event->getParam('ServiceManager')->get('config');
-        $fixturesConfig = (isset($config['odm-data-fixtures']))? $config['odm-data-fixtures'] : null;
+        $fixturesConfig = (isset($config['odm_fixtures']))? $config['odm_fixtures'] : null;
 
         $commands = array(
             new \DoctrineMongoODMDatafixture\Command\DoctrineMongoODMDatafixtureCommand($fixturesConfig),

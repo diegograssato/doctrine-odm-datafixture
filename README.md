@@ -27,7 +27,7 @@ Then add **DoctrineMongoODMDatafixture** to your **config/application.config.php
 In **module.config.php** you should inform the folder where your fixtures, for example:
 
 ```
-  'odm-data-fixtures' => [
+  'odm_fixtures' => [
       __NAMESPACE__.'_fixtures' => __DIR__.'/../src/Fixtures',
   ]
 
@@ -36,7 +36,7 @@ In **module.config.php** you should inform the folder where your fixtures, for e
 or group configurator
 
 ```
-'odm-data-fixtures' => [
+'odm_fixturess' => [
     'groups' => [
         'default' => [
             __NAMESPACE__.'_fixtures' => __DIR__.'/../src/Fixtures/default',
@@ -57,25 +57,25 @@ To rotate the fixture use the terminal command:
 The odm:fixture:load command loads data fixtures from your bundles:
 
 ```
-  php public/index.php odm:fixture:load
+  vendor/bin/doctrine-module odm:fixture:load
 ```
 
 You can also optionally specify the path to fixtures with the **--fixtures** option:
 
 ```
-  php public/index.php odm:fixture:load --fixtures=/path/to/fixtures1 --fixtures=/path/to/fixtures2
+  vendor/bin/doctrine-module odm:fixture:load --fixtures=/path/to/fixtures1 --fixtures=/path/to/fixtures2
 ```
 
 If you want to append the fixtures instead of flushing the database first you can use the **--append** option:
 
 ```
-  php public/index.php odm:fixture:load --fixtures=/path/to/fixtures1 --fixtures=/path/to/fixtures2 --append
+  vendor/bin/doctrine-module odm:fixture:load --fixtures=/path/to/fixtures1 --fixtures=/path/to/fixtures2 --append
 ```
 
 You can also optionally specify the group configuration:
 
 ```
-  php public/index.php odm:fixture:load --group production
+  vendor/bin/doctrine-module odm:fixture:load --group production
 ```
 
 Finish!
