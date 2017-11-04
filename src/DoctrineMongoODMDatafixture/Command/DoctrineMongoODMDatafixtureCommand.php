@@ -32,22 +32,26 @@ class DoctrineMongoODMDatafixtureCommand extends AbstractCommand
     protected function configure()
     {
         $this
-            ->setName('odm:fixture:load')
+            ->setName('odm:fixtures:load')
             ->setDescription('Load data fixtures to your database.')
-            ->addOption('fixtures', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory to load data fixtures from.')
+            ->addOption('fixture', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory to load data fixtures from.')
             ->addOption('group', null, InputOption::VALUE_OPTIONAL, 'Set group.')
             ->addOption('dm', null, InputOption::VALUE_OPTIONAL, 'Set document manager.')
             ->addOption('append', null, InputOption::VALUE_NONE, 'Append the data fixtures instead of deleting all data from the database first.')
             ->setHelp(
                 <<<EOT
-The <info>odm:fixture:load</info> command loads data fixtures from your bundles:
-  <info>php public/index.php odm:fixture:load -n</info>
-You can also optionally specify the path to fixtures with the <info>--fixtures</info> option:
-  <info>php public/index.php odm:fixture:load --fixtures=/path/to/fixtures1 --fixtures=/path/to/fixtures2</info>
+The <info>odm:fixtures:load</info> command loads data fixtures from your bundles:
+  <info>vendor/bin/doctrine-module odm:fixtures:load -n</info>
+You can also optionally specify the path to fixtures with the <info>--fixture</info> option:
+  <info>vendor/bin/doctrine-module odm:fixtures:load --fixture=/path/to/fixtures1 --fixture=/path/to/fixtures2</info>
+  or
+  <info>vendor/bin/doctrine-module odm:fixtures:load --fixture /path/to/fixtures1 --fixture /path/to/fixtures2</info>
 If you want to append the fixtures instead of flushing the database first you can use the <info>--append</info> option:
-  <info>php public/index.php odm:fixture:load --append</info>
+  <info>vendor/bin/doctrine-module odm:fixtures:load --append</info>
   If you want select to use group configuration
-  <info>php public/index.php odm:fixture:load --group production</info>
+  <info>vendor/bin/doctrine-module odm:fixtures:load --group production</info>
+  or
+  <info>vendor/bin/doctrine-module odm:fixtures:load --group production --append</info>
 
 EOT
             );
@@ -56,8 +60,8 @@ EOT
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln(sprintf('<comment>%s</comment>', "Loading fixtures"));
-        $output->writeln(sprintf('<comment>%s</comment>', "------------------\n"));
+        $output->writeln(sprintf('<comment>%s</comment>', "Loading ODM fixtures."));
+        $output->writeln(sprintf('<comment>%s</comment>', "---------------------\n"));
         if ($input->isInteractive() && !$input->getOption('append')) {
             if (!$this->askConfirmation($input, $output, '<question>Careful, database will be purged. Do you want to continue y/N ?</question>', false)) {
                 return;
@@ -74,7 +78,7 @@ EOT
         );
 
         $loader = new Loader();
-        $dirOrFile = $input->getOption('fixtures');
+        $dirOrFile = $input->getOption('fixture');
         if ($dirOrFile) {
             $paths = is_array($dirOrFile) ? $dirOrFile : array($dirOrFile);
             $this->paths = array_unique($paths);

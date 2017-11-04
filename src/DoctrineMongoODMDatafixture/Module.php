@@ -2,20 +2,21 @@
 
 namespace DoctrineMongoODMDatafixture;
 
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputOption;
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\ModuleManagerInterface;
-use Symfony\Component\Console\Helper\QuestionHelper;
 
 class Module
 {
-    const VERSION = '1.3';
+    const VERSION = '2.0';
 
     public function getConfig()
     {
         return include __DIR__ . '/../../config/module.config.php';
     }
+
     /**
      * {@inheritDoc}
      */
@@ -25,10 +26,10 @@ class Module
         // Initialize logger collector once the profiler is initialized itself
         $events->attach(
             'profiler_init', function (EventInterface $e) use ($manager) {
-                $manager->getEvent()->getParam('ServiceManager')->get('doctrine.mongo_logger_collector.odm_default');
-            }
+            $manager->getEvent()->getParam('ServiceManager')->get('doctrine.mongo_logger_collector.odm_default');
+        }
         );
-        $events->getSharedManager()->  attach('doctrine', 'loadCli.post', array($this, 'loadCli'));
+        $events->getSharedManager()->attach('doctrine', 'loadCli.post', array($this, 'loadCli'));
     }
 
     /**
@@ -37,12 +38,13 @@ class Module
     public function loadCli(EventInterface $event)
     {
         $config = $event->getParam('ServiceManager')->get('config');
-        $fixturesConfig = (isset($config['odm_fixtures']))? $config['odm_fixtures'] : null;
+        $fixturesConfig = (isset($config['doctrine']['odm_fixtures'])) ? $config['doctrine']['odm_fixtures'] : null;
 
-        $commands = array(
+
+        $commands = [
             new \DoctrineMongoODMDatafixture\Command\DoctrineMongoODMDatafixtureCommand($fixturesConfig),
             new \DoctrineMongoODMDatafixture\Command\DoctrineMongoODMDatafixtureListCommand($fixturesConfig)
-        );
+        ];
 
         foreach ($commands as $command) {
             $command->getDefinition()->addOption(
@@ -63,7 +65,7 @@ class Module
         $documentManagerName = !empty($documentManagerName) ? $documentManagerName : 'odm_default';
 
         $documentManager = $event->getParam('ServiceManager')->get('doctrine.documentmanager.' . $documentManagerName);
-        $documentHelper  = new \Doctrine\ODM\MongoDB\Tools\Console\Helper\DocumentManagerHelper($documentManager);
+        $documentHelper = new \Doctrine\ODM\MongoDB\Tools\Console\Helper\DocumentManagerHelper($documentManager);
         $cli->getHelperSet()->set($documentHelper, 'dm');
         $cli->getHelperSet()->set(new QuestionHelper(), 'question');
     }

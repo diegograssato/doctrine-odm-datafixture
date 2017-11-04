@@ -31,30 +31,31 @@ class DoctrineMongoODMDatafixtureListCommand extends AbstractCommand
     protected function configure()
     {
         $this
-            ->setName('odm:fixture:list')
+            ->setName('odm:fixtures:list')
             ->setDescription('Lists data fixtures to your database.')
-            ->addOption('fixtures', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory to load data fixtures from.')
+            ->addOption('fixture', null, InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, 'The directory to load data fixtures from.')
             ->addOption('dm', null, InputOption::VALUE_OPTIONAL, 'Set document manager.')
             ->addOption('group', null, InputOption::VALUE_OPTIONAL, 'Set group.')
             ->setHelp(
                 <<<EOT
-The <info>odm:fixture:load</info> command loads data fixtures from your bundles:
-  <info>php public/index.php odm:fixture:load</info>
-You can also optionally specify the path to fixtures with the <info>--fixtures</info> option:
-  <info>php public/index.php odm:fixture:load --fixtures=/path/to/fixtures1 --fixtures=/path/to/fixtures2</info>
-
+The <info>odm:fixtures:list</info> command loads data fixtures from your bundles:
+  <info>vendor/bin/doctrine-module odm:fixtures:list</info>
+You can also optionally specify the path to fixtures with the <info>--fixture</info> option:
+  <info>vendor/bin/doctrine-module odm:fixtures:list --fixture=/path/to/fixtures1 --fixture=/path/to/fixtures2</info>
+  or
+  <info>vendor/bin/doctrine-module odm:fixtures:list --fixture /path/to/fixtures1 --fixture /path/to/fixtures2</info>
+ 
 EOT
             );
-        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln(sprintf('<comment>%s</comment>', "Lists fixtures"));
-        $output->writeln(sprintf('<comment>%s</comment>', "------------------\n"));
+        $output->writeln(sprintf('<comment>%s</comment>', "Listing ODM fixtures."));
+        $output->writeln(sprintf('<comment>%s</comment>', "----------------------\n"));
 
         $loader = new Loader();
-        $dirOrFile = $input->getOption('fixtures');
+        $dirOrFile = $input->getOption('fixture');
         if ($dirOrFile) {
             $paths = is_array($dirOrFile) ? $dirOrFile : array($dirOrFile);
             $this->paths = array_unique($paths);
