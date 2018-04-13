@@ -1,4 +1,5 @@
 <?php
+
 namespace DoctrineMongoODMDatafixture\Command;
 
 use Doctrine\ODM\MongoDB\Tools\Console\Command\Schema\AbstractCommand;
