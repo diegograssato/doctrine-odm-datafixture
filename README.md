@@ -3,7 +3,7 @@ DoctrineMongoODMDatafixture
 
 Module to generate fixture with Doctrine ODM
 
-Installation
+Instalation
 ------------
 
 To install is quite simple, add the **composer.json:**

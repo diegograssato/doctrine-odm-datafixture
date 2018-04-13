@@ -22,7 +22,9 @@ class Module
      */
     public function init(ModuleManagerInterface $manager)
     {
+        // get eventManager from inteface
         $events = $manager->getEventManager();
+
         // Initialize logger collector once the profiler is initialized itself
         $events->attach(
             'profiler_init', function (EventInterface $e) use ($manager) {
