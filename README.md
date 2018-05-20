@@ -15,11 +15,11 @@ To install is quite simple, add the **composer.json:**
 Next step is to update the composer
 
 ```
-  php composer.phar self-update
+  composer self-update
 ```
 
 ```
-  php composer.phar install
+  composer install
 ```
 
 Then add **DoctrineMongoODMDatafixture** to your **config/application.config.php**.
