@@ -45,7 +45,7 @@ You can also optionally specify the path to fixtures with the <info>--fixture</i
   <info>vendor/bin/doctrine-module odm:fixtures:list --fixture=/path/to/fixtures1 --fixture=/path/to/fixtures2</info>
   or
   <info>vendor/bin/doctrine-module odm:fixtures:list --fixture /path/to/fixtures1 --fixture /path/to/fixtures2</info>
- 
+
 EOT
             );
     }
@@ -121,7 +121,7 @@ EOT
     }
     protected function isGroupSupport()
     {
-        if(count($this->fixturesConfig) === 0) {
+        if (count($this->fixturesConfig) === 0) {
             return false;
         }
 
@@ -130,27 +130,27 @@ EOT
 
     protected function getPathFromConig(InputInterface $input, OutputInterface $output)
     {
-        if($this->isGroupSupport()) {
+        if ($this->isGroupSupport()) {
 
             $group = $input->getOption('group');
-            if(isset($this->fixturesConfig['groups']['default']) && empty($group)) {
+            if (isset($this->fixturesConfig['groups']['default']) && empty($group)) {
 
                 $this->paths = $this->fixturesConfig['groups']['default'];
                 $output->writeln(sprintf('<comment>%s</comment>', "Loading [ default ] group."));
 
-            }elseif (isset($this->fixturesConfig['groups'][$group])) {
+            } elseif (isset($this->fixturesConfig['groups'][$group])) {
 
                 $this->paths = $this->fixturesConfig['groups'][$group];
                 $output->writeln(sprintf('<comment>%s</comment>', "Loading [ $group ] group."));
 
             }
 
-        }elseif (count($this->fixturesConfig) > 0) {
+        } elseif (count($this->fixturesConfig) > 0) {
 
             $this->paths = $this->fixturesConfig;
             $output->writeln(sprintf('<comment>%s</comment>', "Loading path from configuration file."));
 
-        }elseif (empty($this->paths)) {
+        } elseif (empty($this->paths)) {
 
             $output->writeln(sprintf('<comment>%s</comment>', "Detecting fixture in application."));
             $this->paths = $this->findFixtureInApplication();
