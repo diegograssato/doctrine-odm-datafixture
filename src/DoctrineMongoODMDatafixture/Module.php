@@ -42,7 +42,6 @@ class Module
         $config = $event->getParam('ServiceManager')->get('config');
         $fixturesConfig = (isset($config['doctrine']['odm_fixtures'])) ? $config['doctrine']['odm_fixtures'] : null;
 
-
         $commands = [
             new \DoctrineMongoODMDatafixture\Command\DoctrineMongoODMDatafixtureCommand($fixturesConfig),
             new \DoctrineMongoODMDatafixture\Command\DoctrineMongoODMDatafixtureListCommand($fixturesConfig)
