@@ -84,12 +84,10 @@ EOT
             $paths = is_array($dirOrFile) ? $dirOrFile : array($dirOrFile);
             $this->paths = array_unique($paths);
         } else {
-
             $this->getPathFromConig($input, $output);
         }
 
         foreach ($this->paths as $path) {
-
             if (is_dir($path)) {
                 $loader->loadFromDirectory($path);
             } elseif (is_file($path)) {
@@ -145,7 +143,6 @@ EOT
 
     protected function isGroupSupport()
     {
-
         if (count($this->fixturesConfig) === 0) {
             return false;
         }
@@ -156,32 +153,22 @@ EOT
     protected function getPathFromConig(InputInterface $input, OutputInterface $output)
     {
         if ($this->isGroupSupport()) {
-
             $group = $input->getOption('group');
             if (isset($this->fixturesConfig['groups']['default']) && empty($group)) {
-
                 $this->paths = $this->fixturesConfig['groups']['default'];
                 $output->writeln(sprintf('<comment>%s</comment>', "Loading [ default ] group."));
-
             } elseif (isset($this->fixturesConfig['groups'][$group])) {
-
                 $this->paths = $this->fixturesConfig['groups'][$group];
                 $output->writeln(sprintf('<comment>%s</comment>', "Loading [ $group ] group."));
-
             }
-
         } elseif (count($this->fixturesConfig) > 0) {
-
             $this->paths = $this->fixturesConfig;
             $output->writeln(sprintf('<comment>%s</comment>', "Loading path from configuration file."));
-
         }
 
         if (empty($this->paths)) {
-
             $output->writeln(sprintf('<comment>%s</comment>', "Detecting fixture in application."));
             $this->paths = $this->findFixtureInApplication();
-
         }
     }
 
@@ -250,7 +237,6 @@ EOT
      */
     private function askConfirmation(InputInterface $input, OutputInterface $output, $question, $default)
     {
-
         if (!class_exists('Symfony\Component\Console\Question\ConfirmationQuestion')) {
             $dialog = $this->getHelperSet()->get('dialog');
             return $dialog->askConfirmation($output, $question, $default);
